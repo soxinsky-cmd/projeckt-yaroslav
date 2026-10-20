@@ -1,0 +1,23 @@
+{
+  "name": "progect",
+  "version": "1.0.0",
+  "description": "slide-show",
+  "license": "MIT",
+  "author": "YAROV",
+  "type": "commonjs",
+  "main": "app.js",
+  "scripts": {
+    "test": "test",
+    "build": "webpack"
+  },
+  "dependencies": {
+    "css-loader": "^7.1.4",
+    "git": "^0.1.5",
+    "style-loader": "^4.0.0",
+    "webpack": "^5.106.2",
+    "webpack-cli": "^7.0.2"
+  },
+  "devDependencies": {
+    "eslint": "^10.3.0"
+  }
+}

@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Слайдшоу</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        #slides {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            padding: 20px;
+            max-width: 800px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+        }
+        #slides img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            max-height: 500px;
+            object-fit: contain;
+            background: #eee;
+            transition: opacity 0.5s ease;
+        }
+        #slides p {
+            font-size: 1.1rem;
+            color: #333;
+            margin-top: 12px;
+            min-height: 2em;
+        }
+        .controls {
+            margin-top: 16px;
+        }
+        .controls button {
+            padding: 8px 20px;
+            margin: 0 8px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 6px;
+            background: #007bff;
+            color: white;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .controls button:hover {
+            background: #0056b3;
+        }
+        .controls button:disabled {
+            opacity: 0.5;
+            cursor: default;
+        }
+        .status {
+            font-size: 0.9rem;
+            color: #777;
+            margin-top: 8px;
+        }
+        /* Индикаторы слайдов */
+        .indicators {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        .indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ccc;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .indicator.active {
+            background: #007bff;
+        }
+    </style>
+</head>
+<body>
+    <div id="slides">
+        <!-- Элементы будут добавлены динамически -->
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const images2 = [
+                { src: 'images/photo_1.jpg', caption: 'розы' },
+                { src: 'images/photo_2.jpg', caption: '' },
+                { src: 'images/photo_3.jpg', caption: '' },
+                { src: 'images/photo_4.jpg', caption: '' },
+                { src: 'images/photo_5.jpg', caption: '' },
+                { src: 'images/photo_6.jpg', caption: '' },
+                { src: 'images/photo_7.jpg', caption: '' },
+                { src: 'images/photo_8.jpg', caption: '' },
+                { src: 'images/photo_9.jpg', caption: '' },
+                { src: 'images/photo_10.jpg', caption: '' },
+                { src: 'images/photo_11.jpg', caption: '' },
+                { src: 'images/photo_12.jpg', caption: '' },
+                { src: 'images/photo_13.jpg', caption: '' },
+                { src: 'images/photo_14.jpg', caption: '' },
+                
+            ];
+
+            // Для тестирования без локальных изображений:
+            // images2 = images2.map((item, index) => ({
+            //     src: `https://picsum.photos/seed/${index}/800/500`,
+            //     caption: item.caption
+            // }));
+
+            function doSlides(images, containerSelector, delay = 3000) {
+                const container = document.querySelector(containerSelector);
+                if (!container) {
+                    console.error(`Контейнер "${containerSelector}" не найден`);
+                    return;
+                }
+
+                container.innerHTML = '';
+
+                const img = document.createElement('img');
+                img.style.opacity = '0';
+                container.appendChild(img);
+
+                const caption = document.createElement('p');
+                container.appendChild(caption);
+
+                // Кнопки управления
+                const controls = document.createElement('div');
+                controls.className = 'controls';
+                const btnPrev = document.createElement('button');
+                btnPrev.textContent = '◀ Назад';
+                const btnNext = document.createElement('button');
+                btnNext.textContent = 'Вперед ▶';
+                controls.appendChild(btnPrev);
+                controls.appendChild(btnNext);
+                container.appendChild(controls);
+
+                // Индикаторы слайдов
+                const indicatorsContainer = document.createElement('div');
+                indicatorsContainer.className = 'indicators';
+                images.forEach((_, index) => {
+                    const indicator = document.createElement('div');
+                    indicator.className = `indicator ${index === 0 ? 'active' : ''}`;
+                    indicator.dataset.index = index;
+                    indicatorsContainer.appendChild(indicator);
+                });
+                container.appendChild(indicatorsContainer);
+
+                // Статус
+                const status = document.createElement('div');
+                status.className = 'status';
+                container.appendChild(status);
+
+                let slideNumber = 0;
+                let timer = null;
+                let isPaused = false;
+
+                function showSlide(index) {
+                    if (index < 0) index = images.length - 1;
+            if (index >= images.length) index = 0;
+            slideNumber = index;
+
+            const current = images[slideNumber];
+            img.style.opacity = '0';
+
+            setTimeout(() => {
+                img.src = current.src;
+                img.alt = current.caption;
+                img.title = current.caption;
+                caption.textContent = current.caption;
+                status.textContent = `${slideNumber + 1} / ${images.length}`;
+
+                // Обновляем индикаторы
+                document.querySelectorAll('.indicator').forEach((ind, i) => {
+                    ind.classList.toggle('active', i === slideNumber);
+                });
+
+                setTimeout(() => {
+                    img.style.opacity = '1';
+                }, 50);
+            }, 300);
+
+            img.onerror = function() {
+                this.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500"%3E%3Crect fill="%23eee" width="800" height="500"/%3E%3Ctext x="400" y="250" font-family="Arial" font-size="24" text-anchor="middle" fill="%23999"%3EИзображение не найдено%3C/text%3E%3C/svg%3E';
+                this.alt = 'Ошибка загрузки';
+                caption.textContent = `[Ошибка] ${current.caption}`;
+            };
+        }
+
+        function next() {
+            showSlide(slideNumber + 1);
+        }
+
+        function prev() {
+            showSlide(slideNumber - 1);
+        }
+
+        function goToSlide(index) {
+            showSlide(index);
+        }
+
+        function startAutoPlay() {
+            if (timer) clearInterval(timer);
+            timer = setInterval(next, delay);
+        }
+
+        function stopAutoPlay() {
+    if (timer) {
+        clearInterval(timer);
+        timer = null;
+    }
+}
+
+// Привязываем кнопки
+btnNext.addEventListener('click', function() {
+    stopAutoPlay();
+    next();
+    startAutoPlay();
+});
+
+btnPrev.addEventListener('click', function() {
+    stopAutoPlay();
+    prev();
+    startAutoPlay();
+});
+
+// Обработчики для индикаторов
+document.querySelectorAll('.indicator').forEach(indicator => {
+    indicator.addEventListener('click', function() {
+        const index = parseInt(this.dataset.index, 10);
+        stopAutoPlay();
+        goToSlide(index);
+        startAutoPlay();
+    });
+});
+
+// Пауза при наведении на контейнер
+container.addEventListener('mouseenter', function() {
+    isPaused = true;
+    stopAutoPlay();
+});
+
+container.addEventListener('mouseleave', function() {
+    isPaused = false;
+    startAutoPlay();
+});
+
+// Обработка клавиатуры (стрелки ← и →)
+document.addEventListener('keydown', function(e) {
+    if (isPaused) return;
+
+    switch (e.key) {
+        case 'ArrowLeft':
+            stopAutoPlay();
+            prev();
+            startAutoPlay();
+            break;
+        case 'ArrowRight':
+            stopAutoPlay();
+            next();
+            startAutoPlay();
+            break;
+    }
+});
+
+// Запускаем слайд‑шоу
+showSlide(0);
+startAutoPlay();
+
+// Возвращаем объект с методами управления
+return {
+    next,
+    prev,
+    goToSlide,
+    stop: stopAutoPlay,
+    start: startAutoPlay
+};
+}
+
+// Запускаем слайд‑шоу в контейнере div#slides
+const slideshow = doSlides(images2, 'div#slides', 3000);
+
+// Для ручного управления из консоли:
+// slideshow.stop();  slideshow.start();
+});
+</script>
+</body>
+</html>
+    

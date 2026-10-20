@@ -1,0 +1,139 @@
+*
+ {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.title.main {
+    position: absolute;   /* вырываем из потока */
+    top: 0;               /* прижимаем к верху */
+    left: 0;
+    width: 100%;          /* на всю ширину */
+    font-size: 60px;
+    font-weight: bold;
+    text-align: center;
+    padding: 20px;
+    background: #080708;
+    color: #fff;
+}
+*
+
+
+
+
+{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #1e1e1e;
+    font-family: sans-serif;
+}
+
+/* ─── Контейнер слайдера ─── */
+.slider {
+    position: relative;
+    width: 800px;
+    max-width: 90vw;
+    overflow: hidden;          /* скрываем выходящие за границы слайды */
+    border-radius: 25px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    user-select: none;
+}
+
+/* ─── Дорожка ─── */
+.slider__track {
+    display: flex;             /* слайды в ряд */
+    transition: transform 0.5s ease; /* плавное переключение */
+    will-change: transform;
+}
+
+/* ─── Один слайд ─── */
+.slider__slide {
+    flex: 0 0 100%;            /* каждый слайд занимает 100% ширины */
+    height: 500px;
+}
+
+.slider__slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;         /* фото заполняет блок без искажений */
+    display: block;
+    pointer-events: none;      /* чтобы drag по фото работал корректно */
+}
+
+/* ─── Кнопки вперёд/назад ─── */
+.slider__btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    width: 50px;
+    height: 50px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    font-size: 20px;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.slider__btn:hover {
+    background: rgba(0, 0, 0, 0.8);
+    transform: translateY(-50%) scale(1.1);
+}
+
+.slider__btn--prev { left: 15px; }
+.slider__btn--next { right: 15px; }
+
+/* ─── Точки-индикаторы ─── */
+.slider__dots {
+    position: absolute;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    z-index: 10;
+}
+
+.slider__dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    background: transparent;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+}
+
+.slider__dot:hover {
+    transform: scale(1.2);
+}
+
+.slider__dot.active {
+    background: #fff;
+}
+
+/* ─── Адаптив ─── */
+@media (max-width: 600px) {
+    .slider__slide {
+        height: 300px;
+    }
+    .slider__btn {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+    }
+}

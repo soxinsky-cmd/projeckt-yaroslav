@@ -1,0 +1,33 @@
+{
+  "id": 1,
+  "firstName": "John",
+  "lastName": "Doe",
+  "email": "john.doe@example.com",
+  "age": 32,
+  "isActive": true,
+  "balance": 1250.75,
+  "address": {
+    "street": "123 Main St",
+    "city": "Springfield",
+    "state": "IL",
+    "zip": "62701",
+    "country": "US"
+  },
+  "phoneNumbers": [
+    {
+      "type": "home",
+      "number": "+1-555-0100"
+    },
+    {
+      "type": "work",
+      "number": "+1-555-0200"
+    }
+  ],
+  "tags": [
+    "developer",
+    "blogger",
+    "open-source"
+  ],
+  "createdAt": "2024-01-15T09:30:00Z",
+  "updatedAt": null
+}
